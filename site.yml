@@ -1,0 +1,20 @@
+---
+- name: Automate Cisco IOS Network Configuration
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Fetch IP Interface Summary
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: interface_output
+
+    - name: Display Interface Brief Output
+      debug:
+        var: interface_output.stdout_lines
+
+    - name: Configure Global NTP Server
+      cisco.ios.ios_config:
+        lines:
+          - ntp server 8.8.8.8

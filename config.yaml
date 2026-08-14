@@ -1,0 +1,6 @@
+---
+ospf_process_id: 1
+area: 0
+domain_name: "lab.local"
+banners:
+  motd: "AUTHORIZED ACCESS ONLY - AUTOMATED NETWORK"
