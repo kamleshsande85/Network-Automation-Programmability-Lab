@@ -7,7 +7,7 @@
 [![Linux](https://img.shields.io/badge/Kali_Linux-Control_Node-172740.svg?style=for-the-badge&logo=kalilinux&logoColor=white)](https://www.kali.org/)
 [![GNS3](https://img.shields.io/badge/GNS3-Network_Lab-4A90E2.svg?style=for-the-badge)](https://www.gns3.com/)
 
-*A comprehensive, multi-module NetDevOps framework designed to automate enterprise Cisco IOS network infrastructure from a Kali Linux Automation Node within GNS3. Integrates Python SSH Automation, Data Serialization (JSON/YAML), RESTful APIs, Ansible Configuration Management, and Software-Defined Networking (SDN) architectural audits.*
+*A comprehensive, multi-module NetDevOps framework designed to automate enterprise Cisco IOS network infrastructure from a Kali Linux Automation Node within GNS3. Integrates Python SSH Automation, Infrastructure as Code (IaC), REST API Programmability, and Ansible Configuration Management.*
 
 ---
 
@@ -33,7 +33,7 @@
 
 ## 📌 1. Project Overview
 
-In traditional enterprise networks, manual device-by-device configuration via CLI (SSH/Telnet) leads to operational bottlenecks, syntax errors, and configuration drift. This project implements a modern **NetDevOps Automation Pipeline** aligning with **Cisco CCNA 200-301 v1.1 Domain 6.0 (Automation and Programmability)**.
+In traditional enterprise networks, manual device-by-device configuration via CLI (SSH/Telnet) leads to operational bottlenecks, syntax errors, and configuration drift. This project implements a multi-layered automation framework that demonstrates modern NetDevOps practices.
 
 ### Key Objectives:
 * **Automated Device Backups:** Eliminate manual config extraction by running automated SSH backup routines.
@@ -49,38 +49,16 @@ In traditional enterprise networks, manual device-by-device configuration via CL
 
 The network infrastructure is deployed inside **GNS3**, featuring a centralized **Management Subnet (`172.16.10.0/24`)** and an **OSPF Area 0 Backbone Network**.
 
-```text
- ┌─────────────────────────────────────────────────────────────────────────────┐
- │               [ MANAGEMENT NETWORK BOUNDARY: 172.16.10.0/24 ]               │
- │                                                                             │
- │                    ┌───────────────────────────────┐                        │
- │                    │       Kali Linux Node         │                        │
- │                    │    (Automation Controller)    │                        │
- │                    │         172.16.10.100         │                        │
- │                    └───────────────┬───────────────┘                        │
- │                                    │ (Virtual TAP / Cloud Interface)        │
- │                                    ▼                                        │
- │                            ┌──────────────┐                                 │
- │                            │ Cloud Node   │                                 │
- │                            └──────┬───────┘                                 │
- │                                   │                                         │
- │                                   ▼                                         │
- │                     ┌───────────────────────────┐                           │
- │                     │    MGMT_SW1 (Switch)      │                           │
- │                     └─────────────┬─────────────┘                           │
- │                                   │                                         │
- │                    ┌──────────────┴──────────────┐                          │
- │                    │                             │                          │
- │                    ▼                             ▼                          │
- │           ┌─────────────────┐           ┌─────────────────┐                 │
- │           │   R1 Router     │           │   R2 Router     │                 │
- │           │  172.16.10.1    │───────────│  172.16.10.2    │                 │
- │           │ Loopback:1.1.1.1│  OSPF A0  │ Loopback:2.2.2.2│                 │
- │           └─────────────────┘           └─────────────────┘                 │
- │                                                                             │
- └─────────────────────────────────────────────────────────────────────────────┘
+### Visual Network Topology:
 
-```
+![GNS3 Network Topology](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/01_gns3_network_topology.png?raw=true)
+
+**Topology Overview:**
+- **Kali Control Node** (`172.16.10.100`) - Automation Engine executing Python/Ansible scripts
+- **Router 1 (R1)** (`172.16.10.1`) - Management interface with Loopback0: `1.1.1.1`
+- **Router 2 (R2)** (`172.16.10.2`) - Management interface with Loopback0: `2.2.2.2`
+- **Management Switch (MGMT_SW1)** - Connects all devices via virtual Cloud interface
+- **OSPF Area 0 Backbone** - Dynamic routing between routers via Loopback interfaces
 
 ---
 
@@ -160,6 +138,10 @@ print("\n🎉 Backup Routine Completed!")
 
 ```
 
+**Execution Proof:**
+
+![Python Device Backup Execution](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/02_python_device_backup.png?raw=true)
+
 #### 1.2 Bulk Configuration Push & OSPF Setup (`config_push.py`)
 
 Automates the creation of `Loopback0` interfaces and provisions dynamic OSPF Area 0 routing across the fabric.
@@ -208,6 +190,10 @@ for ip, cmd_list in configs.items():
 print("\n🎉 Bulk Configuration Push Completed!")
 
 ```
+
+**Execution Proof:**
+
+![Python Config Push Execution](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/03_python_config_push.png?raw=true)
 
 ---
 
@@ -296,6 +282,10 @@ print("\n🎉 Data Serialization Module Executed Successfully!")
 
 ```
 
+**Execution Proof:**
+
+![JSON/YAML Automation Execution](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/05_json_yaml_automation.png.png?raw=true)
+
 ---
 
 ### Module 3: REST API Interaction & Programmability
@@ -312,7 +302,7 @@ print("=== Module 3: REST API Interaction & Automation ===\n")
 
 # 1. Testing HTTP GET Request
 print("[+] Testing HTTP GET Request (Fetching API Endpoint)...")
-get_url = "[https://jsonplaceholder.typicode.com/todos/1](https://jsonplaceholder.typicode.com/todos/1)"
+get_url = "https://jsonplaceholder.typicode.com/todos/1"
 
 try:
     response = requests.get(get_url, timeout=5)
@@ -327,7 +317,7 @@ print("\n" + "="*50 + "\n")
 
 # 2. Testing HTTP POST Request
 print("[+] Testing HTTP POST Request (Pushing JSON Config Payload)...")
-post_url = "[https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)"
+post_url = "https://jsonplaceholder.typicode.com/posts"
 headers = {'Content-Type': 'application/json; charset=UTF-8'}
 
 payload = {
@@ -348,6 +338,10 @@ except Exception as e:
 print("\n🎉 REST API Interaction Module Executed Successfully!")
 
 ```
+
+**Execution Proof:**
+
+![REST API HTTP Requests](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/06_rest_api_http_requests.png?raw=true)
 
 ---
 
@@ -446,6 +440,10 @@ print("🎉 Module 4 (Ansible Automation) Executed Successfully!")
 
 ```
 
+**Execution Proof:**
+
+![Ansible Playbook Execution](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/07_ansible_playbook_execution.png?raw=true)
+
 ---
 
 ### Module 5: Software-Defined Networking (SDN) Audit
@@ -505,6 +503,10 @@ if __name__ == "__main__":
 
 ```
 
+**Execution Proof:**
+
+![SDN Architecture Audit](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/08_sdn_architecture_audit.png?raw=true)
+
 ---
 
 ## 🧪 6. Verification & Verification Commands
@@ -523,13 +525,13 @@ Loopback0                  1.1.1.1         YES manual up                    up
 
 ### 2. Verify OSPF Neighbor Adjacencies:
 
-```ios
-R1# show ip ospf neighbor
+**Router R1 Verification:**
 
-Neighbor ID     Pri   State           Dead Time   Address         Interface
-2.2.2.2           1   FULL/DR         00:00:34    172.16.10.2     GigabitEthernet0/0
+![Router R1 OSPF Neighbors](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/04_router-R1_ospf_neighbors.png?raw=true)
 
-```
+**Router R2 Verification:**
+
+![Router R2 OSPF Neighbors](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/04_router-R2_ospf_neighbors.png?raw=true)
 
 ### 3. Verify NTP Configuration (Provisioned via Ansible):
 
@@ -543,40 +545,36 @@ ntp server 8.8.8.8
 
 ## 📸 7. Visual Portfolio & Screenshot Mappings
 
-All execution proof screenshots are organized inside the `images/` directory:
+All execution proof screenshots are organized inside the `Screenshots/` directory:
 
-| S.No. | Screenshot File Name | Description |
-| --- | --- | --- |
-| **01** | `images/01_gns3_network_topology.png` | Complete GNS3 Canvas Topology with Management Shapes & Annotations |
-| **02** | `images/02_python_device_backup.png` | Output of `device_backup.py` showing generated `.txt` config files |
-| **03** | `images/03_python_config_push.png` | Execution output of `config_push.py` provisioning Loopbacks & OSPF |
-| **04** | `images/04_router_ospf_neighbors.png` | Cisco IOS CLI output verifying OSPF Neighbor Adjacency (`FULL/DR`) |
-| **05** | `images/05_json_yaml_automation.png` | Output of `json_yaml_automation.py` updating domain-name & banners |
-| **06** | `images/06_rest_api_http_requests.png` | Terminal output of `api_request.py` showing HTTP GET (200) & POST (201) |
-| **07** | `images/07_ansible_playbook_execution.png` | Execution log of `ansible_sim.py` showing `PLAY RECAP ok=2 changed=1` |
-| **08** | `images/08_sdn_architecture_audit.png` | Output of `sdn_architecture_check.py` showing verified SDN components |
-
-### Embedded Visual Proof Examples:
-
-#### 1. GNS3 Network Topology
-
-#### 2. Ansible Playbook Execution Proof
+| S.No. | Screenshot File Name | Description | Link |
+| --- | --- | --- | --- |
+| **01** | `01_gns3_network_topology.png` | Complete GNS3 Canvas Topology with Management Shapes & Annotations | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/01_gns3_network_topology.png) |
+| **02** | `02_python_device_backup.png` | Output of `device_backup.py` showing generated `.txt` config files | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/02_python_device_backup.png) |
+| **03** | `03_python_config_push.png` | Execution output of `config_push.py` provisioning Loopbacks & OSPF | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/03_python_config_push.png) |
+| **04** | `04_router-R1_ospf_neighbors.png` | Cisco IOS CLI output verifying OSPF Neighbor Adjacency (`FULL/DR`) | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/04_router-R1_ospf_neighbors.png) |
+| **05** | `05_json_yaml_automation.png.png` | Output of `json_yaml_automation.py` updating domain-name & banners | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/05_json_yaml_automation.png.png) |
+| **06** | `06_rest_api_http_requests.png` | Terminal output of `api_request.py` showing HTTP GET (200) & POST (201) | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/06_rest_api_http_requests.png) |
+| **07** | `07_ansible_playbook_execution.png` | Execution log of `ansible_sim.py` showing `PLAY RECAP ok=2 changed=1` | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/07_ansible_playbook_execution.png) |
+| **08** | `08_sdn_architecture_audit.png` | Output of `sdn_architecture_check.py` showing verified SDN components | [View](https://github.com/kamleshsande85/Network-Automation-Programmability-Lab/blob/main/Screenshots/08_sdn_architecture_audit.png) |
 
 ---
 
 ## 📁 8. Repository Directory Tree
 
 ```text
-Project 4-Automation/
-├── images/
+Network-Automation-Programmability-Lab/
+├── Screenshots/
 │   ├── 01_gns3_network_topology.png
 │   ├── 02_python_device_backup.png
 │   ├── 03_python_config_push.png
-│   ├── 04_router_ospf_neighbors.png
-│   ├── 05_json_yaml_automation.png
+│   ├── 04_router-R1_ospf_neighbors.png
+│   ├── 04_router-R2_ospf_neighbors.png
+│   ├── 05_json_yaml_automation.png.png
 │   ├── 06_rest_api_http_requests.png
 │   ├── 07_ansible_playbook_execution.png
 │   └── 08_sdn_architecture_audit.png
+├── GNS3 Data/
 ├── config.yaml
 ├── config_push.py
 ├── device_backup.py
@@ -587,6 +585,7 @@ Project 4-Automation/
 ├── ansible_sim.py
 ├── api_request.py
 ├── sdn_architecture_check.py
+├── Project 4: Network Automation & Programmability .md
 └── README.md
 
 ```
@@ -597,11 +596,10 @@ Project 4-Automation/
 
 1. **Clone the Repository:**
 ```bash
-git clone [https://github.com/your-username/enterprise-network-automation.git](https://github.com/your-username/enterprise-network-automation.git)
-cd enterprise-network-automation
+git clone https://github.com/kamleshsande85/Network-Automation-Programmability-Lab.git
+cd Network-Automation-Programmability-Lab
 
 ```
-
 
 2. **Set up Virtual Environment & Dependencies:**
 ```bash
@@ -610,7 +608,6 @@ source env/bin/activate
 pip install netmiko pyyaml requests
 
 ```
-
 
 3. **Execute Automation Pipeline in Sequence:**
 ```bash
@@ -623,8 +620,27 @@ python sdn_architecture_check.py
 
 ```
 
+---
 
+## 🎓 Learning Outcomes
+
+Upon completing this project, you will have hands-on experience with:
+- ✅ Python-based network automation using Netmiko
+- ✅ Infrastructure as Code (IaC) principles with JSON/YAML
+- ✅ REST API interaction and HTTP requests
+- ✅ Ansible playbooks for declarative configuration management
+- ✅ SDN architecture and programmatic network auditing
+- ✅ GNS3 lab environment setup and management
 
 ---
 
+## 📝 License
+
+This project is open-source and available for educational and professional use.
+
 ---
+
+**🏆 Project Status:** ✅ **COMPLETE & VERIFIED**
+
+Last Updated: August 2026
+
